@@ -6,7 +6,6 @@ def get_motion_score(frame1, frame2, sensitivity):
     if frame1 is None or frame2 is None:
         return 0
     frame_delta = cv2.absdiff(frame1, frame2)
-    # The sensitivity threshold is now a parameter
     thresh = cv2.threshold(frame_delta, sensitivity, 255, cv2.THRESH_BINARY)[1]
     motion_score = (np.sum(thresh) / 255) / (thresh.shape[0] * thresh.shape[1]) * 100
     return motion_score
@@ -78,7 +77,8 @@ def analyze_video_with_debug(video_path, output_path, car_roi_percentage, sign_r
         if current_state in [State.CAR_STATIONARY, State.CAR_DEPARTED] and stationary_start_frame is not None:
             timer_frames = (frame_number if stationary_end_frame is None else stationary_end_frame) - stationary_start_frame
             timer_seconds = timer_frames / fps
-            cv2.putText(frame, f"Pit Time: {timer_seconds:.2f}s", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            # Changed the label to "Tire Change Time"
+            cv2.putText(frame, f"Tire Change Time: {timer_seconds:.2f}s", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
         out.write(frame)
         prev_car_gray, prev_sign_gray = car_gray, sign_gray
@@ -90,7 +90,6 @@ def analyze_video_with_debug(video_path, output_path, car_roi_percentage, sign_r
     if stationary_start_frame is not None and stationary_end_frame is not None:
         return (stationary_end_frame - stationary_start_frame) / fps
     else:
-        # Car may have stopped but video ended before departure
         if stationary_start_frame is not None:
             return (frame_number - stationary_start_frame) / fps
         return 0.0
