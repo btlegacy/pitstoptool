@@ -24,7 +24,7 @@ def analyze_video(video_path):
         raise Exception("Error: Could not determine video FPS.")
 
     # Region of Interest Definition
-    roi_percentage = [0.35, 0.65, 0.25, 0.75]
+    roi_percentage = [0.05, 0.55, 0.25, 0.75]
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     roi = [
