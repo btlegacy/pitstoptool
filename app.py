@@ -85,9 +85,13 @@ if uploaded_file is not None:
         with st.spinner("Analyzing video... This will take a few moments."):
             try:
                 debug_output_path = os.path.join(tempfile.gettempdir(), "debug_video.mp4")
-                stationary_time = analyze_video_with_debug(video_path, debug_output_path, car_roi_percentage, sign_roi_percentage, thresholds)
+                analysis_results = analyze_video_with_debug(video_path, debug_output_path, car_roi_percentage, sign_roi_percentage, thresholds)
                 
-                st.success(f"**Tire Change Time: {stationary_time:.2f} seconds**")
+                tire_change_time = analysis_results.get("tire_change_time", 0.0)
+                total_pit_time = analysis_results.get("total_pit_time", 0.0)
+
+                st.success(f"**Tire Change Time: {tire_change_time:.2f} seconds**")
+                st.success(f"**Total Pit Stop Time: {total_pit_time:.2f} seconds**")
                 
                 if generate_debug_video:
                     st.subheader("Analysis Debug Video")
