@@ -12,13 +12,13 @@ st.write(
     "Upload a video of a pit stop to analyze the duration the car is stationary."
 )
 
-# --- Controls in Sidebar ---
+# --- Controls in Sidebar with new defaults ---
 st.sidebar.header("Analysis Settings")
 
 with st.sidebar.expander("ROI Settings", expanded=True):
     st.info("Adjust the boxes to isolate the car and the signboard.")
     # Car ROI
-    roi_top = st.slider("Car ROI Top", 0.0, 1.0, 0.15, 0.01)
+    roi_top = st.slider("Car ROI Top", 0.0, 1.0, 0.04, 0.01)
     roi_bottom = st.slider("Car ROI Bottom", 0.0, 1.0, 0.45, 0.01)
     roi_left = st.slider("Car ROI Left", 0.0, 1.0, 0.25, 0.01)
     roi_right = st.slider("Car ROI Right", 0.0, 1.0, 0.75, 0.01)
@@ -26,16 +26,16 @@ with st.sidebar.expander("ROI Settings", expanded=True):
     # Signboard ROI
     sign_roi_top = st.slider("Sign ROI Top", 0.0, 1.0, 0.20, 0.01)
     sign_roi_bottom = st.slider("Sign ROI Bottom", 0.0, 1.0, 0.40, 0.01)
-    sign_roi_left = st.slider("Sign ROI Left", 0.0, 1.0, 0.65, 0.01)
-    sign_roi_right = st.slider("Sign ROI Right", 0.0, 1.0, 0.75, 0.01)
+    sign_roi_left = st.slider("Sign ROI Left", 0.0, 1.0, 0.69, 0.01)
+    sign_roi_right = st.slider("Sign ROI Right", 0.0, 1.0, 0.84, 0.01)
     sign_roi_percentage = [sign_roi_top, sign_roi_bottom, sign_roi_left, sign_roi_right]
 
-with st.sidebar.expander("Threshold Settings", expanded=False):
+with st.sidebar.expander("Threshold Settings", expanded=True):
     st.info("Fine-tune the sensitivity of the motion detection.")
-    sensitivity = st.slider("Motion Sensitivity", 1, 50, 25, help="Lower values detect smaller changes. Default: 25")
-    car_arrival_threshold = st.slider("Car Arrival Threshold", 0.1, 10.0, 2.0, 0.1, help="Motion score needed to detect the car's arrival.")
+    sensitivity = st.slider("Motion Sensitivity", 1, 50, 50, help="Lower values detect smaller changes. Default: 50")
+    car_arrival_threshold = st.slider("Car Arrival Threshold", 0.1, 10.0, 10.0, 0.1, help="Motion score needed to detect the car's arrival.")
     sign_hit_threshold = st.slider("Sign Hit Threshold", 1.0, 30.0, 10.0, 0.5, help="Motion score needed in the sign ROI to start the timer.")
-    car_departure_threshold = st.slider("Car Departure Threshold", 0.1, 10.0, 3.0, 0.1, help="Motion score in the car ROI to stop the timer.")
+    car_departure_threshold = st.slider("Car Departure Threshold", 0.1, 10.0, 10.0, 0.1, help="Motion score in the car ROI to stop the timer.")
 
 thresholds = {
     "sensitivity": sensitivity,
@@ -87,7 +87,7 @@ if uploaded_file is not None:
                 debug_output_path = os.path.join(tempfile.gettempdir(), "debug_video.mp4")
                 stationary_time = analyze_video_with_debug(video_path, debug_output_path, car_roi_percentage, sign_roi_percentage, thresholds)
                 
-                st.success(f"**Pit stop duration: {stationary_time:.2f} seconds**")
+                st.success(f"**Tire Change Time: {stationary_time:.2f} seconds**")
                 
                 if generate_debug_video:
                     st.subheader("Analysis Debug Video")
